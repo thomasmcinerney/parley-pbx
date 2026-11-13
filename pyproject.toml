@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parley-pbx"
+version = "0.1.0"
+description = "A small SIP PBX server written from scratch in Python."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+dependencies = []
+keywords = ["sip", "pbx", "voip", "telephony", "rtp"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Communications :: Internet Phone",
+    "Topic :: Communications :: Telephony",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+parley = "parley.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]

@@ -1,0 +1,59 @@
+# Example Parley configuration. Copy it, edit it, then run:
+#
+#     python -m parley serve --config pbx.toml
+
+[sip]
+# Address and UDP port to listen on. To accept phones on your LAN, bind to
+# this machine's LAN address (for example "192.168.1.10").
+bind = "127.0.0.1"
+port = 5060
+# Address phones are told to use for signalling and audio. Only needed when
+# bind is "0.0.0.0".
+# advertise = "192.168.1.10"
+
+[rtp]
+# UDP ports used to relay call audio. Each call in progress uses two.
+port_min = 10000
+port_max = 10099
+
+[calls]
+# Seconds to ring an extension before giving up.
+ring_timeout = 30
+
+[[users]]
+extension = "100"
+name = "Front Desk"
+
+[[users]]
+extension = "101"
+name = "Workshop"
+
+[[users]]
+extension = "102"
+name = "Office"
+
+# Dialplan rules are tried in order; the first match wins.
+# X = any digit, Z = 1-9, N = 2-9, [..] = a set, "." = one or more characters.
+
+# Dialling 0 rings the front desk.
+[[dialplan]]
+match = "0"
+action = "dial"
+target = "100"
+
+# Three-digit numbers starting with 1 ring that extension.
+[[dialplan]]
+match = "1XX"
+action = "dial"
+
+# 8 followed by an extension also rings it: ${EXTEN:1} drops the leading 8.
+[[dialplan]]
+match = "81XX"
+action = "dial"
+target = "${EXTEN:1}"
+
+# There is no outside line, so refuse anything starting with 9.
+[[dialplan]]
+match = "9."
+action = "reject"
+status = 403
